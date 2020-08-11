@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -44,6 +53,11 @@ class UserController extends Controller
         ]);
     }
 
+    public function profile()
+    {
+        return auth('api')->user();
+    }
+
     /**
      * Display the specified resource.
      *
@@ -64,7 +78,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $this->validate($request,[
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'password' => 'sometimes|min:8|max:12'
+        ]);
+
+        $user->update($request->all());
+        return ['message' => 'Updated the user info'];
     }
 
     /**
