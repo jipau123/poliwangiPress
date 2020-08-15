@@ -13,11 +13,11 @@
                 <div class="card card-widget widget-user">
                     <!-- Add the bg color to the header using any of the bg-* classes -->
                     <div class="widget-user-header text-white" style="background-image:url('../img/mac.jpg')">
-                        <h3 class="widget-user-username">Elizabeth Pierce</h3>
-                        <h5 class="widget-user-desc">Web Designer</h5>
+                        <h3 class="widget-user-username">{{this.form.name}}</h3>
+                        <h5 class="widget-user-desc">{{this.form.type}}</h5>
                     </div>
                     <div class="widget-user-image">
-                        <img class="img-circle" src="" alt="User Avatar">
+                        <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -68,43 +68,34 @@
                             <form class="form-horizontal">
                             <div class="form-group">
                                 <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                
                                 <div class="col-sm-12">
-                                <input type="email" v-model="form.name" class="form-control" id="inputName" placeholder="Name">
+                                    <input type="name" v-model="form.name" id="inputName"
+                                    placeholder="Name"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
+                                    <has-error :form="form" field="name"></has-error>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                
                                 <div class="col-sm-12">
-                                <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email">
+                                    <input v-model="form.email" type="email" id="inputEmail"
+                                    placeholder="Email Address"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
+                                    <has-error :form="form" field="email"></has-error>
                                 </div>
                             </div>
-                            <!-- <div class="form-group row">
-                                <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputName2" placeholder="Name">
-                                </div>
-                            </div> -->
                             <div class="form-group">
                                 <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                                
                                 <div class="col-sm-12">
-                                <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                                    <textarea v-model="form.bio" id="inputExperience"
+                                    placeholder="Experience" class="form-control">
+                                    </textarea>
+                                    <has-error :form="form" field="bio"></has-error>
                                 </div>
                             </div>
-                            <!-- <div class="form-group row">
-                                <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                </div>
-                            </div> -->
-                            <!-- <div class="form-group row">
-                                <div class="offset-sm-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label>
-                                    <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                    </label>
-                                </div>
-                                </div>
-                            </div> -->
                             <div class="form-group">
                                 <label for="photo" class="col-sm-2 col-form-label">Profile Photo</label>
                                 <div class="col-sm-12">
@@ -114,14 +105,18 @@
                             <div class="form-group">
                                 <label for="passport" class="col-sm-12 col-form-label">
                                     Passport <br> (leave empty if not changing)</label>
+                                
                                 <div class="col-sm-12">
-                                <input class="form-control" id="passport" placeholder="Passport"
-                                type="passport">
+                                    <input v-model="form.password" type="password"
+                                    id="password" placeholder="Passport"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
+                                    <has-error :form="form" field="password"></has-error>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="offset-col-sm-2 col-sm-12">
-                                <button type="submit" class="btn btn-success">Update</button>
+                                <button @click.prevent="updateInfo" type="submit"
+                                class="btn btn-success">Update</button>
                                 </div>
                             </div>
                             </form>
@@ -152,19 +147,50 @@
             }
         },
         mounted() {
+
             console.log('Component mounted.')
         },
+
         methods: {
+
+            getProfilePhoto() {
+                // let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/"+ this.form.photo;
+                // return photo;
+                return "img/profile/"+ this.form.photo;
+            },
+            updateInfo() {
+                this.$Progress.start();
+                if(this.form.password == ''){
+                    this.form.password = undefined;
+                }
+                this.form.put('api/profile')
+                .then(()=>{
+                    Fire.$emit('AfterCreate');
+                    this.$Progress.finish();
+                })
+                .catch(()=>{
+                    this.$Progress.fail();
+                });
+            },
             updateProfile(e) {
                 // console.log('uploading');
                 let file = e.target.files[0];
-                // console.log(file);
-                var reader = new FileReader();
-                reader.onloadend = (file) => {
+                console.log(file);
+                let reader = new FileReader();
+                if(file['size'] < 2111775) {
+                    reader.onloadend = (file) => {
                     // console.log('RESULT', reader.result)
                     this.form.photo = reader.result;
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'You are uploading a large file',
+                    })
                 }
-                reader.readAsDataURL(file);
+                
             }
         },
         created() {

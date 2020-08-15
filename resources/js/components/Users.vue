@@ -1,31 +1,12 @@
 <template>
     <div class="container">
-        <!-- <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Users Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <div class="row mt-5">
+        <div class="row mt-5" v-if="$gate.isAdmin()">
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Users Table</h3>
 
                 <div class="card-tools">
-                  <!-- <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div> -->
-
                   <button class="btn btn-success" @click="newModal">
                       Add New 
                       <i class="fa fa-user-plus fa-fw"></i>
@@ -45,7 +26,8 @@
                       <th>Modify</th>
                     </tr>
                   
-                    <tr v-for="user in users" :key="user.id">
+                    <tr v-for="user in users.data" :key="user.id">
+
                       <td>{{user.id}}</td>
                       <td>{{user.name}}</td>
                       <td>{{user.email}}</td>
@@ -65,10 +47,18 @@
                 </table>
               </div>
               <!-- /.card-body -->
+              <div class="card-footer">
+                  <pagination :data="users" @pagination-change-page="getResults"></pagination>
+              </div>
             </div>
             <!-- /.card -->
           </div>
         </div>
+
+        <div v-if="!$gate.isAdmin()">
+            <not-found></not-found>
+        </div>
+
         <!-- Modal -->
                 <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -146,6 +136,12 @@
             }
         },
         methods: {
+            getResults(page = 1) {
+			axios.get('api/user?page=' + page)
+				.then(response => {
+					this.users = response.data;
+				});
+		    },
             updateUser() {
                 this.$Progress.start();
                 // console.log('Editing data');
@@ -204,7 +200,9 @@
                 })
             },
             loadUsers() {
-                axios.get("api/user").then(({ data }) => (this.users = data.data));
+                if(this.$gate.isAdmin()){
+                    axios.get("api/user").then(({ data }) => (this.users = data));
+                }
             },
             createUser() {
                 this.$Progress.start();
@@ -229,6 +227,16 @@
         },
 
         created() {
+            Fire.$on('searching',() => {
+                let query = this.$parent.search;
+                axios.get('api/findUser?q=' + query)
+                .then((data) => {
+                    this.users = data.data
+                })
+                .catch(() => {
+
+                })
+            })
             this.loadUsers();
             Fire.$on('AfterCreate',() => {
                 this.loadUsers();
