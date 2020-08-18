@@ -35,7 +35,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </ul>
 
     <!-- SEARCH FORM -->
-    <!-- <form class="form-inline ml-3"> -->
+    <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" @keyup="searchit"
         v-model="search" type="search" placeholder="Search" aria-label="Search">
@@ -45,7 +45,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </button>
         </div>
       </div>
-    <!-- </form> -->
+    </form>
     
   </nav>
   <!-- /.navbar -->
@@ -54,7 +54,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-      <img src="./img/project.png" alt="Press Logo" class="brand-image img-circle elevation-3"
+      <img src="./img/press.jpeg" alt="Press Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">
         Poliwangi | PRESS
@@ -98,7 +98,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cog green"></i>
               <p>
-                Management
+                Kelola Data User
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -106,15 +106,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <li class="nav-item">
                 <router-link to="/users" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
-                  <p>Users</p>
+                  <p>Data User</p>
+                </router-link>
+
+                <router-link to="#" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Tambah User</p>
                 </router-link>
               </li>
-              <!-- <li class="nav-item">
-                <router-link to="/users" class="nav-link">
-                  <i class="far fa-circle-o nav-icon"></i>
-                  <p>Inactive Page</p>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cog green"></i>
+              <p>
+                Kelola Usulan
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <router-link to="#" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Info Status</p>
                 </router-link>
-              </li> -->
+
+                <router-link to="#" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Data Usulan</p>
+                </router-link>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cog green"></i>
+              <p>
+                Kelola Berkas
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <router-link to="#" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Berkas Panduan</p>
+                </router-link>
+              </li>
             </ul>
           </li>
 
