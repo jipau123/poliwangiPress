@@ -30,9 +30,9 @@ class AuthServiceProvider extends ServiceProvider
             return $user->type === 'admin';
         });
 
-        Gate::define('isAuthor',function($user){
-            return $user->type === 'author';
-        });
+        // Gate::define('isAuthor',function($user){
+        //     return $user->type === 'author';
+        // });
         
         Gate::define('isUser',function($user){
             return $user->type === 'user';

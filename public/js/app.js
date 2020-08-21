@@ -68320,11 +68320,7 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("option", { attrs: { value: "user" } }, [
-                            _vm._v("Standar User")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "author" } }, [
-                            _vm._v("Author")
+                            _vm._v("User")
                           ])
                         ]
                       ),

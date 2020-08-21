@@ -96,7 +96,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           @can('isAdmin')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cog green"></i>
+              <i class="nav-icon fas fa-address-book green"></i>
               <p>
                 Kelola Data User
                 <i class="right fas fa-angle-left"></i>
@@ -110,7 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </router-link>
 
                 <router-link to="#" class="nav-link">
-                  <i class="fas fa-users nav-icon"></i>
+                  <i class="fas fa-user-plus nav-icon"></i>
                   <p>Tambah User</p>
                 </router-link>
               </li>
@@ -119,7 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cog green"></i>
+              <i class="nav-icon fas fa-paste purple"></i>
               <p>
                 Kelola Usulan
                 <i class="right fas fa-angle-left"></i>
@@ -142,7 +142,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cog green"></i>
+              <i class="nav-icon fas fa-file-alt green"></i>
               <p>
                 Kelola Berkas
                 <i class="right fas fa-angle-left"></i>
@@ -158,14 +158,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link to="/developer" class="nav-link">
               <i class="nav-icon fas fa-cogs"></i>
               <p>
                 Developer
-                <!-- <span class="right badge badge-danger">New</span> -->
               </p>
             </router-link>
+          </li> -->
+          @endcan
+
+          @can('isUser')
+          <li class="nav-item">
+              <router-link to="#" class="nav-link">
+                <i class="fas fa-users nav-icon"></i>
+                <p>Riwayat Usulan</p>
+              </router-link>
+          </li>
+
+          <li class="nav-item">
+              <router-link to="#" class="nav-link">
+                <i class="fas fa-users nav-icon"></i>
+                <p>Pengajuan Baru</p>
+              </router-link>
+          </li>
+
+          <li class="nav-item">
+              <router-link to="#" class="nav-link">
+                <i class="fas fa-users nav-icon"></i>
+                <p>Status Pengajuan</p>
+              </router-link>
           </li>
           @endcan
 
