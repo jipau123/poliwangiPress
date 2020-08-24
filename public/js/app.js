@@ -2190,7 +2190,8 @@ __webpack_require__.r(__webpack_exports__);
         email: '',
         password: '',
         type: '',
-        bio: ''
+        bio: '',
+        photo: ''
       })
     };
   },
@@ -2199,9 +2200,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getProfilePhoto: function getProfilePhoto() {
-      // let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/"+ this.form.photo;
-      // return photo;
-      return "img/profile/" + this.form.photo;
+      var photo = this.form.photo.length > 200 ? this.form.photo : "img/profile/" + this.form.photo;
+      return photo; // return "img/profile/"+ this.form.photo;
     },
     updateInfo: function updateInfo() {
       var _this = this;
@@ -2397,7 +2397,8 @@ __webpack_require__.r(__webpack_exports__);
         email: '',
         password: '',
         type: '',
-        bio: ''
+        bio: '' // photo : ''
+
       })
     };
   },
