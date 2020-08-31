@@ -49,6 +49,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </form>
 
+    <div class="navbar ml-auto">
+      <strong>
+      {{ Auth::user()->type }}
+      </strong>
+    </div>
+
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
@@ -58,9 +64,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           {{ Auth::user()->name }}
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-          <a href="#" class="dropdown-item"> 
+          <!-- <a href="#" class="dropdown-item"> 
           <p>{{ Auth::user()->type }}</p>
-          </a>
+          </a> -->
 
           <router-link to="/profile" class="nav-link dropdown-item">
             <i class="nav-icon fas fa-user orange"></i> Profile
@@ -157,12 +163,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <router-link to="#" class="nav-link">
+                <router-link to="/usulan" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
                   <p>Info Status</p>
                 </router-link>
 
-                <router-link to="#" class="nav-link">
+                <router-link to="/usulan" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
                   <p>Data Usulan</p>
                 </router-link>
@@ -180,7 +186,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <router-link to="#" class="nav-link">
+                <router-link to="/berkas" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
                   <p>Berkas Panduan</p>
                 </router-link>
@@ -280,11 +286,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Footer -->
   <footer class="main-footer">
     <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
+    <!-- <div class="float-right d-none d-sm-inline">
       Anything you want
+    </div> -->
+
+    <!-- To the center -->
+    <div class="float text-center">
+      <strong>POLIWANGI - PRESS</strong>
     </div>
+
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <!-- <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved. -->
   </footer>
 </div>
 <!-- ./wrapper -->
