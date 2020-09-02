@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>AdminLTE 3 | Starter</title>
+  <title>Poliwangi | PRESS</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="/css/app.css">
 
@@ -107,7 +107,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="info">
           <a href="#" class="d-block">
             {{ Auth::user()->name }}
-            <p>{{ Auth::user()->type }}</p>
+            <!-- <p>{{ Auth::user()->type }}</p> -->
           </a>
         </div>
       </div>
@@ -206,36 +206,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           @can('isUser')
           <li class="nav-item">
-              <router-link to="#" class="nav-link">
-                <i class="fas fa-users nav-icon"></i>
+              <router-link to="/usulanDosen" class="nav-link">
+                <i class="fas fa-download nav-icon yellow"></i>
                 <p>Riwayat Usulan</p>
               </router-link>
           </li>
 
           <li class="nav-item">
-              <router-link to="#" class="nav-link">
-                <i class="fas fa-users nav-icon"></i>
+              <router-link to="/pengajuan" class="nav-link">
+                <i class="fas fa-book nav-icon orange"></i>
                 <p>Pengajuan Baru</p>
               </router-link>
           </li>
 
           <li class="nav-item">
-              <router-link to="#" class="nav-link">
-                <i class="fas fa-users nav-icon"></i>
+              <router-link to="/pengajuan" class="nav-link">
+                <i class="fas fa-book-open nav-icon indigo"></i>
                 <p>Status Pengajuan</p>
               </router-link>
           </li>
           @endcan
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link to="/profile" class="nav-link">
               <i class="nav-icon fas fa-user orange"></i>
               <p>
                 Profile
-                <!-- <span class="right badge badge-danger">New</span> -->
               </p>
             </router-link>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <!-- <a href="#" class="nav-link">
@@ -244,14 +243,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 Logout
               </p>
             </a> -->
-            <a class="nav-link" href="{{ route('logout') }}"
+            <!-- <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-power-off red"></i>
                 <p>
                     {{ __('Logout') }}
                 </p>
-            </a>
+            </a> -->
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
