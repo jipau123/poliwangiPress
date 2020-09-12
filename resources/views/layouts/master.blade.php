@@ -72,6 +72,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <i class="nav-icon fas fa-user orange"></i> Profile
           </router-link>
 
+          <router-link to="/password" class="nav-link dropdown-item">
+            <i class="nav-icon fas fa-lock orange"></i> Password
+          </router-link>
+
           <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
             <i class="nav-icon fas fa-power-off red"></i>
@@ -145,10 +149,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>Data User</p>
                 </router-link>
 
-                <router-link to="#" class="nav-link">
+                <!-- <router-link to="#" class="nav-link">
                   <i class="fas fa-user-plus nav-icon"></i>
                   <p>Tambah User</p>
-                </router-link>
+                </router-link> -->
               </li>
             </ul>
           </li>
@@ -205,26 +209,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
           @endcan
 
           @can('isUser')
-          <li class="nav-item">
-              <router-link to="/usulanDosen" class="nav-link">
-                <i class="fas fa-download nav-icon yellow"></i>
-                <p>Riwayat Usulan</p>
-              </router-link>
+          <li class="nav-item has-treeview">
+          
+            <a href="#" class="nav-link">
+              <!-- <router-link to="/usulanDosen" class="nav-link"> -->
+                  <i class="fas fa-download nav-icon yellow"></i>
+                  <p>
+                    Riwayat Usulan
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                <!-- </router-link> -->
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <router-link to="/usulanDosen" class="nav-link">
+                  <i class="fas fa-book nav-icon orange"></i>
+                  <p>Pengajuan</p>
+                </router-link>
+              </li>
+
+              <li class="nav-item">
+                <router-link to="/status" class="nav-link">
+                  <i class="fas fa-book-open nav-icon indigo"></i>
+                  <p>Status</p>
+                </router-link>
+              </li>
+            </ul>
+              
           </li>
 
-          <li class="nav-item">
-              <router-link to="/pengajuan" class="nav-link">
-                <i class="fas fa-book nav-icon orange"></i>
-                <p>Pengajuan Baru</p>
-              </router-link>
-          </li>
-
-          <li class="nav-item">
-              <router-link to="/pengajuan" class="nav-link">
-                <i class="fas fa-book-open nav-icon indigo"></i>
-                <p>Status Pengajuan</p>
-              </router-link>
-          </li>
+          
           @endcan
 
           <!-- <li class="nav-item">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsulanTable extends Migration
+class CreateUsulanDosenTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateUsulanTable extends Migration
      */
     public function up()
     {
-        Schema::create('usulan', function (Blueprint $table) {
+        Schema::create('usulan_dosen', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
             $table->string('deskripsi');
             $table->string('dosen');
+            $table->string('file');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateUsulanTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usulan');
+        Schema::dropIfExists('usulan_dosen');
     }
 }
