@@ -118,9 +118,10 @@
                 if(this.form.password == ''){
                     this.form.password = undefined;
                 }
-                this.form.put('api/profile')
+                this.form.put('api/update_password')
                 .then(()=>{
                     Fire.$emit('AfterCreate');
+                    this.form.reset();
                     toast.fire({
                             type: 'success',
                             title: 'Password has been changed'

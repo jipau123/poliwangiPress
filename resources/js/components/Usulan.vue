@@ -32,13 +32,10 @@
                 <h3 class="card-title">Tabel Usulan</h3>
 
                 <!-- <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
+                  <button class="btn btn-success" @click="newModal">
+                    Add New
+                    <i class="fas fa-file-upload"></i>
+                  </button>
                 </div> -->
 
               </div>
@@ -49,8 +46,9 @@
                     <tr>
                       <th>ID</th>
                       <th>Judul</th>
-                      <th>Deskripsi</th>
-                      <th>Dosen</th>
+                      <!-- <th>Deskripsi</th> -->
+                      <th>User</th>
+                      <!-- <th>File</th> -->
                       <th>Registered At</th>
                       <th>Modify</th>
                     </tr>
@@ -59,15 +57,16 @@
                     <tr v-for="usulan in usulan.data" :key="usulan.id">
                       <td>{{usulan.id}}</td>
                       <td>{{usulan.judul}}</td>
-                      <td>{{usulan.deskripsi}}</td>
-                      <td>{{usulan.dosen}}</td>
+                      <!-- <td>{{usulan.deskripsi}}</td> -->
+                      <td>{{usulan.name}}</td>
+                      <!-- <td>{{usulan.file}}</td> -->
                       <td>{{usulan.created_at | myDate}}</td>
                       <td>
-                          <a href="#">
+                          <a href="#" @click="editModal(usulan)">
                               <i class="fa fa-edit blue"></i>
                           </a>
                           /
-                          <a href="#">
+                          <a href="#" @click="deleteUsulan(usulan.id)">
                               <i class="fa fa-trash red"></i>
                           </a>
                       </td>
@@ -76,31 +75,66 @@
                 </table>
               </div>
               <!-- /.card-body -->
+              <div class="card-footer">
+                  <pagination :data="usulan" @pagination-change-page="getResults"></pagination>
+              </div>
             </div>
             <!-- /.card -->
           </div>
         </div>
 
         <!-- Modal -->
-            <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="addNewLabel">AddNew</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <form @submit.prevent="createUsulan">
                 <div class="modal-body">
-                    ...
+                    <div class="form-group">
+                            <label for="inputJudul" class="col-form-label">Judul</label>
+
+                            <input v-model="form.judul" type="text" name="judul"
+                                placeholder="Judul"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('judul') }">
+                            <has-error :form="form" field="judul"></has-error>
+                    </div>
+                    <div class="form-group">
+                            <label for="inputDeskripsi" class="col-form-label">Deskripsi</label>
+
+                            <input v-model="form.deskripsi" name="deskripsi"
+                                placeholder="Deskripsi"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('deskripsi') }">
+                            <has-error :form="form" field="deskripsi"></has-error>
+                    </div>
+                    <div class="form-group">
+                            <label for="inputDosen" class="col-form-label">Dosen</label>
+
+                            <input v-model="form.dosen" type="text" name="dosen"
+                                placeholder="Nama Dosen"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('dosen') }">
+                            <has-error :form="form" field="dosen"></has-error>
+                    </div>
+                    <div class="form-group">
+                              <label for="file" class="col-form-label">Upload File</label>
+                                    
+                              <div class="col-sm-12">
+                                  <input type="file" name="file" class="form-input">
+                              </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
+                </form>
                 </div>
             </div>
-            </div> -->
+            </div>
 
     </div>
 </template>
@@ -111,14 +145,88 @@
         return {
           usulan : {},
           form: new Form({
+            id : '',
             judul : '',
             deskripsi : '',
-            dosen : ''
+            dosen : '',
+            file : ''
           })
         }
-      }
-        // mounted() {
-        //     console.log('Component mounted.')
-        // }
+      },
+      methods: {
+        getResults(page = 1) {
+          axios.get('api/usulan_admin?page=' + page)
+            .then(response => {
+              this.usulan = response.data;
+            });
+		    },
+        // newModal(){
+        //   this.form.reset();
+        //   $('#addNew').modal('show');
+        // },
+        editModal(usulan){
+          this.form.reset();
+          $('#addNew').modal('show');
+          this.form.fill(usulan);
+        },
+        deleteUsulan(id){
+          swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+
+                        this.form.delete('api/usulan/'+id).then(()=>{
+                                swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                )
+                            Fire.$emit('AfterCreate');
+                            
+                        }).catch(()=>{
+                            swal.fire("Failed!", "There was something wronge.", "warning");
+                        });
+                    }
+                })
+        },
+        loadUsulan(){
+          axios.get("api/usulan_admin").then(({ data }) => this.usulan = data);
+        },
+        createUsulan() {
+          this.$Progress.start();
+          this.form.post('api/usulan')
+          .then(()=>{
+              Fire.$emit('AfterCreate');
+              $('#addNew').modal('hide')
+
+              toast.fire({
+                type: 'success',
+                title: 'Usulan Created in successfully'
+              })
+
+              this.$Progress.finish();
+          })
+          .catch(()=>{
+
+          })
+          
+        }
+      },
+      created() {
+        this.loadUsulan();
+        Fire.$on('AfterCreate',()=>{
+          this.loadUsulan();
+        });
+      } 
+      // mounted() {
+      //   console.log('Component mounted.')
+      //   this.loadUsulan();
+      // }
     }
 </script>

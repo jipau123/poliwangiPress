@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class Usulan extends Authenticatable
 {
@@ -19,7 +20,7 @@ class Usulan extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'judul', 'deskripsi', 'dosen', 'file'
+        'judul', 'deskripsi', 'file','id_user','status'
     ];
 
     /**
@@ -39,4 +40,23 @@ class Usulan extends Authenticatable
     protected $casts = [
         // 'email_verified_at' => 'datetime',
     ];
+
+    public static function allJoin_id(){
+        $user = auth('api')->user();
+        return $user = DB::table('usulan')
+            ->select('usulan.*','users.name')
+            ->leftJoin('users', 'usulan.id_user', '=', 'users.id')
+            ->where('usulan.id_user',$user->id)
+            // ->latest()->paginate(5);
+            ->paginate(5);
+    }
+
+    public static function allJoin(){
+        $user = auth('api')->user();
+        return $user = DB::table('usulan')
+            ->select('usulan.*','users.name')
+            ->leftJoin('users', 'usulan.id_user', '=', 'users.id')
+            // ->latest()->paginate(5);
+            ->paginate(5);
+    }
 }

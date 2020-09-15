@@ -32,7 +32,7 @@
                 <h3 class="card-title">Tabel Usulan</h3>
 
                 <div class="card-tools">
-                  <button class="btn btn-success" data-toggle="modal" data-target="#addNew">
+                  <button class="btn btn-success" @click="newModal">
                     Add New
                     <i class="fas fa-file-upload"></i>
                   </button>
@@ -44,24 +44,24 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>ID</th>
+                      <!-- <th>ID</th> -->
                       <th>Judul</th>
                       <!-- <th>Deskripsi</th> -->
-                      <th>Dosen</th>
-                      <!-- <th>File</th> -->
+                      <th>User</th>
+                      <th>File</th>
                       <th>Registered At</th>
-                      <th>Modify</th>
+                      <!-- <th>Modify</th> -->
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="usulan in usulan" :key="usulan.id">
-                      <td>{{usulan.id}}</td>
+                      <!-- <td>{{usulan.id}}</td> -->
                       <td>{{usulan.judul}}</td>
                       <!-- <td>{{usulan.deskripsi}}</td> -->
-                      <td>{{usulan.dosen}}</td>
-                      <!-- <td>{{usulan.file}}</td> -->
+                      <td>{{usulan.name}}</td>
+                      <td>{{usulan.file}}</td>
                       <td>{{usulan.created_at | myDate}}</td>
-                      <td>
+                      <!-- <td>
                           <a href="#">
                               <i class="fa fa-edit blue"></i>
                           </a>
@@ -69,7 +69,7 @@
                           <a href="#">
                               <i class="fa fa-trash red"></i>
                           </a>
-                      </td>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>
@@ -110,14 +110,6 @@
                             <has-error :form="form" field="deskripsi"></has-error>
                     </div>
                     <div class="form-group">
-                            <label for="inputDosen" class="col-form-label">Dosen</label>
-
-                            <input v-model="form.dosen" type="text" name="dosen"
-                                placeholder="Nama Dosen"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('dosen') }">
-                            <has-error :form="form" field="dosen"></has-error>
-                    </div>
-                    <div class="form-group">
                               <label for="file" class="col-form-label">Upload File</label>
                                     
                               <div class="col-sm-12">
@@ -152,6 +144,10 @@
         }
       },
       methods: {
+        newModal(){
+          this.form.reset();
+          $('#addNew').modal('show');
+        },
         loadUsulan(){
           axios.get("api/usulan").then(({ data }) => this.usulan = data.data);
         },

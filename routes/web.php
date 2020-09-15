@@ -28,3 +28,5 @@ Route::get('invoice', function(){
 Route::get('{path}', "HomeController@index")->where('path', '([A-z\d\-\/_.]+)?' );
 
 Route::get('usulan', "UsulanController@index");
+
+Route::get('usulan_admin', "UsulanController@index_admin");

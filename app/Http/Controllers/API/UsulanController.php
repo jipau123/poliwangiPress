@@ -27,8 +27,15 @@ class UsulanController extends Controller
     {
         //
         // if (\Gate::allows('isUser')) {
-            return Usulan::latest()->paginate(10);
+            // return Usulan::latest()->paginate(10);
+            return Usulan::allJoin_id();
         //  }
+    }
+
+    public function index_admin()
+    {
+        //
+            return Usulan::allJoin();
     }
 
     /**
@@ -39,12 +46,14 @@ class UsulanController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth('api')->user();
         //
         return Usulan::create([
             'judul' => $request['judul'],
             'deskripsi' => $request['deskripsi'],
             'file' => $request['file'],
-            'dosen' => $request['dosen']
+            'id_user'=> $user->id,
+            'status'=> 'proses pengajuan'
         ]);
     }
 
@@ -79,6 +88,12 @@ class UsulanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $usulan = Usulan::findOrFail($id);
+
+        // delete the user
+
+        $usulan->delete();
+
+        return ['message' => 'Usulan Deleted'];
     }
 }

@@ -27,7 +27,8 @@ class UserController extends Controller
     {
         // $this->authorize('isAdmin');
         if (\Gate::allows('isAdmin')) {
-           return User::latest()->paginate(5);
+        //    return User::latest()->paginate(5);
+           return User::paginate(5);
         }
         
     }
@@ -79,6 +80,24 @@ class UserController extends Controller
               @unlink($userPhoto); 
             }
           }
+
+        if(!empty($request->password)){
+            $request->merge(['password' => Hash::make($request['password'])]);
+        }
+
+        $user->update($request->all());
+        return ['message' => "Success"];
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = auth('api')->user();
+
+        $this->validate($request,[
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'password' => 'sometimes|required|min:6'
+        ]);
 
         if(!empty($request->password)){
             $request->merge(['password' => Hash::make($request['password'])]);
