@@ -88,12 +88,13 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addNewLabel">AddNew</h5>
+                    <!-- <h5 class="modal-title" v-show="!editmode" id="addNewLabel">AddNew</h5> -->
+                    <h5 class="modal-title" v-show="editmode" id="addNewLabel">Edit</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="createUsulan">
+                <form @submit.prevent="editmode ? updateUsulan() : createUsulan()">
                 <div class="modal-body">
                     <div class="form-group">
                             <label for="inputJudul" class="col-form-label">Judul</label>
@@ -106,19 +107,26 @@
                     <div class="form-group">
                             <label for="inputDeskripsi" class="col-form-label">Deskripsi</label>
 
-                            <input v-model="form.deskripsi" name="deskripsi"
+                            <textarea v-model="form.deskripsi" name="deskripsi"
                                 placeholder="Deskripsi"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('deskripsi') }">
+                            </textarea>
                             <has-error :form="form" field="deskripsi"></has-error>
                     </div>
                     <div class="form-group">
-                            <label for="inputDosen" class="col-form-label">Dosen</label>
+                            <label for="status" class="col-form-label">Status</label>
 
-                            <input v-model="form.dosen" type="text" name="dosen"
-                                placeholder="Nama Dosen"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('dosen') }">
-                            <has-error :form="form" field="dosen"></has-error>
-                    </div>
+                            <select v-model="form.status" id="status" name="status"
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('status') }">
+                                <option value="">Select User Role</option>
+                                <option value="pengajuan">pengajuan</option>
+                                <option value="direview">direview</option>
+                                <option value="diterima">diterima</option>
+                                <option value="ditolak">ditolak</option>
+                                <!-- <option value="author">Author</option> -->
+                            </select>
+                            <has-error :form="form" field="status"></has-error>
+                        </div>
                     <div class="form-group">
                               <label for="file" class="col-form-label">Upload File</label>
                                     
@@ -129,7 +137,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+                    <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                    <!-- <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button> -->
                 </div>
                 </form>
                 </div>
@@ -143,6 +153,7 @@
     export default {
       data() {
         return {
+          editmode : false,
           usulan : {},
           form: new Form({
             id : '',
@@ -154,6 +165,25 @@
         }
       },
       methods: {
+        updateUsulan() {
+                this.$Progress.start();
+                // console.log('Editing data');
+                this.form.put('api/usulan/'+this.form.id)
+                .then(() => {
+                    // success
+                    $('#addNew').modal('hide');
+                    swal.fire(
+                        'Updated!',
+                        'Information has been updated.',
+                        'success'
+                        )
+                        this.$Progress.finish();
+                        Fire.$emit('AfterCreate');
+                })
+                .catch(() => {
+                    this.$Progress.fail();
+                });
+            },
         getResults(page = 1) {
           axios.get('api/usulan_admin?page=' + page)
             .then(response => {
@@ -161,10 +191,12 @@
             });
 		    },
         // newModal(){
+        //   this.editmode = false;
         //   this.form.reset();
         //   $('#addNew').modal('show');
         // },
         editModal(usulan){
+          this.editmode = true;
           this.form.reset();
           $('#addNew').modal('show');
           this.form.fill(usulan);

@@ -55,6 +55,7 @@ let routes = [
     { path: '/pengajuan', component: require('./components/Pengajuan.vue').default },
     { path: '/password', component: require('./components/Password.vue').default },
     { path: '/usulanDosen', component: require('./components/UsulanDosen.vue').default },
+    { path: '/dataUsulan', component: require('./components/DataUsulan.vue').default },
     { path: '*', component: require('./components/NotFound.vue').default }
   ]
 

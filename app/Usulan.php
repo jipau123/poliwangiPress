@@ -59,4 +59,13 @@ class Usulan extends Authenticatable
             // ->latest()->paginate(5);
             ->paginate(5);
     }
+
+    public static function allJoin_diterima(){
+        $user = auth('api')->user();
+        return $user = DB::table('usulan')
+            ->select('usulan.*','users.name')
+            ->leftJoin('users', 'usulan.id_user', '=', 'users.id')
+            ->where('usulan.status','diterima')
+            ->paginate(5);
+    }
 }

@@ -46,11 +46,12 @@
                     <tr>
                       <!-- <th>ID</th> -->
                       <th>Judul</th>
+                      <th>Registered At</th>
                       <th>Status</th>
                       <!-- <th>Deskripsi</th> -->
                       <!-- <th>User</th> -->
                       <!-- <th>File</th> -->
-                      <!-- <th>Registered At</th> -->
+                      
                       <!-- <th>Modify</th> -->
                     </tr>
                   </thead>
@@ -58,21 +59,22 @@
                     <tr v-for="usulan in usulan" :key="usulan.id">
                       <!-- <td>{{usulan.id}}</td> -->
                       <td>{{usulan.judul}}</td>
+                      <td>{{usulan.created_at | myDate}}</td>
                       <td>{{usulan.status}}</td>
                       <!-- <td>{{usulan.deskripsi}}</td> -->
                       <!-- <td>{{usulan.name}}</td> -->
                       <!-- <td>{{usulan.file}}</td> -->
-                      <!-- <td>{{usulan.created_at | myDate}}</td> -->
-                      <td>
+                      
+                      <!-- <td>
                           <a href="#">
                               <i class="fa fa-edit blue"></i>
                               Check
                           </a>
-                          <!-- /
+                          /
                           <a href="#">
                               <i class="fa fa-trash red"></i>
-                          </a> -->
-                      </td>
+                          </a>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>

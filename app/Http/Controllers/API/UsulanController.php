@@ -38,6 +38,12 @@ class UsulanController extends Controller
             return Usulan::allJoin();
     }
 
+    public function index_diterima()
+    {
+        //
+            return Usulan::allJoin_diterima();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -53,7 +59,7 @@ class UsulanController extends Controller
             'deskripsi' => $request['deskripsi'],
             'file' => $request['file'],
             'id_user'=> $user->id,
-            'status'=> 'proses pengajuan'
+            'status'=>'pengajuan'
         ]);
     }
 

@@ -27,7 +27,9 @@ Route::get('profile', 'API\UserController@profile');
 Route::get('findUser', 'API\UserController@search');
 Route::put('profile', 'API\UserController@updateProfile');
 Route::put('update_password', 'API\UserController@updatePassword');
+// Route::get('usulan', 'API\UsulanController@index');
 Route::get('usulan_admin', 'API\UsulanController@index_admin');
+Route::get('usulan_diterima', 'API\UsulanController@index_diterima');
 
 Route::apiResources(['usulan' => 'API\UsulanController']);
 

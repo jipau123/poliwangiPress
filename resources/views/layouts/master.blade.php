@@ -60,9 +60,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-          <i class="nav-icon fas fa-user orange"></i>
-          {{ Auth::user()->name }}
+          <!-- <i class="nav-icon fas fa-user orange"></i>
+          {{ Auth::user()->name }} -->
+          <div class="user-panel mr-3">
+            <div class="image">
+              <img src="./img/profile.png" class="img-circle elevation-2" alt="User Image">
+            </div>
+            {{ Auth::user()->name }}
+          </div>
         </a>
+
+        
+
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
           <!-- <a href="#" class="dropdown-item"> 
           <p>{{ Auth::user()->type }}</p>
@@ -172,7 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>Info Status</p>
                 </router-link>
 
-                <router-link to="/usulan" class="nav-link">
+                <router-link to="/dataUsulan" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
                   <p>Data Usulan</p>
                 </router-link>
