@@ -190,11 +190,11 @@
               this.usulan = response.data;
             });
 		    },
-        // newModal(){
-        //   this.editmode = false;
-        //   this.form.reset();
-        //   $('#addNew').modal('show');
-        // },
+        newModal(){
+          this.editmode = false;
+          this.form.reset();
+          $('#addNew').modal('show');
+        },
         editModal(usulan){
           this.editmode = true;
           this.form.reset();

@@ -46,6 +46,16 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        // 'web' => [
+        //     'driver' => 'session',
+        //     'provider' => 'usulan',
+        // ],
+
+        // 'api' => [
+        //     'driver' => 'passport',
+        //     'provider' => 'usulan',
+        // ],
     ],
 
     /*

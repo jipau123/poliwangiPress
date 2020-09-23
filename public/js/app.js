@@ -3759,11 +3759,11 @@ __webpack_require__.r(__webpack_exports__);
         _this2.usulan = response.data;
       });
     },
-    // newModal(){
-    //   this.editmode = false;
-    //   this.form.reset();
-    //   $('#addNew').modal('show');
-    // },
+    newModal: function newModal() {
+      this.editmode = false;
+      this.form.reset();
+      $('#addNew').modal('show');
+    },
     editModal: function editModal(usulan) {
       this.editmode = true;
       this.form.reset();
@@ -3975,10 +3975,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      editmode: true,
+      editmode: false,
       usulan: {},
       form: new Form({
         id: '',
@@ -3993,10 +3997,8 @@ __webpack_require__.r(__webpack_exports__);
     updateUsulan: function updateUsulan() {
       var _this = this;
 
-      this.$Progress.start(); // console.log('Editing data');
-
+      this.$Progress.start();
       this.form.put('api/usulan/' + this.form.id).then(function () {
-        // success
         $('#addNew').modal('hide');
         swal.fire('Updated!', 'Information has been updated.', 'success');
 
@@ -4007,21 +4009,35 @@ __webpack_require__.r(__webpack_exports__);
         _this.$Progress.fail();
       });
     },
+    getResults: function getResults() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get('api/usulan_dosen?page=' + page).then(function (response) {
+        _this2.usulan = response.data;
+      });
+    },
     newModal: function newModal() {
       this.editmode = false;
       this.form.reset();
       $('#addNew').modal('show');
     },
+    editModal: function editModal(usulan) {
+      this.editmode = true;
+      this.form.reset();
+      $('#addNew').modal('show');
+      this.form.fill(usulan);
+    },
     loadUsulan: function loadUsulan() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("api/usulan").then(function (_ref) {
         var data = _ref.data;
-        return _this2.usulan = data.data;
+        return _this3.usulan = data;
       });
     },
     createUsulan: function createUsulan() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.post('api/usulan').then(function () {
@@ -4032,16 +4048,16 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Usulan Created in successfully'
         });
 
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
       })["catch"](function () {});
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.loadUsulan();
     Fire.$on('AfterCreate', function () {
-      _this4.loadUsulan();
+      _this5.loadUsulan();
     });
   } // mounted() {
   //   console.log('Component mounted.')
@@ -71940,7 +71956,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.usulan, function(usulan) {
+                _vm._l(_vm.usulan.data, function(usulan) {
                   return _c("tr", { key: usulan.id }, [
                     _c("td", [_vm._v(_vm._s(usulan.judul))]),
                     _vm._v(" "),
@@ -71956,7 +71972,19 @@ var render = function() {
                 0
               )
             ])
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "card-footer" },
+            [
+              _c("pagination", {
+                attrs: { data: _vm.usulan },
+                on: { "pagination-change-page": _vm.getResults }
+              })
+            ],
+            1
+          )
         ])
       ])
     ]),
@@ -72111,6 +72139,23 @@ var render = function() {
                       attrs: { type: "button", "data-dismiss": "modal" }
                     },
                     [_vm._v("Close")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.editmode,
+                          expression: "editmode"
+                        }
+                      ],
+                      staticClass: "btn btn-success",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v("Update")]
                   ),
                   _vm._v(" "),
                   _c(

@@ -54,7 +54,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="usulan in usulan" :key="usulan.id">
+                    <tr v-for="usulan in usulan.data" :key="usulan.id">
                       <!-- <td>{{usulan.id}}</td> -->
                       <td>{{usulan.judul}}</td>
                       <!-- <td>{{usulan.deskripsi}}</td> -->
@@ -75,6 +75,9 @@
                 </table>
               </div>
               <!-- /.card-body -->
+              <div class="card-footer">
+                  <pagination :data="usulan" @pagination-change-page="getResults"></pagination>
+              </div>
             </div>
             <!-- /.card -->
           </div>
@@ -121,8 +124,9 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     <!-- <button type="submit" class="btn btn-primary">Create</button> -->
-                    <!-- <button v-show="editmode" type="submit" class="btn btn-success">Update</button> -->
+                    <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
                     <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                    <!-- <button type="submit" class="btn btn-primary">Create</button> -->
                 </div>
                 </form>
                 </div>
@@ -136,7 +140,7 @@
     export default {
       data() {
         return {
-          editmode : true,
+          editmode : false,
           usulan : {},
           form: new Form({
             id : '',
@@ -150,10 +154,8 @@
       methods: {
         updateUsulan() {
                 this.$Progress.start();
-                // console.log('Editing data');
                 this.form.put('api/usulan/'+this.form.id)
                 .then(() => {
-                    // success
                     $('#addNew').modal('hide');
                     swal.fire(
                         'Updated!',
@@ -167,13 +169,25 @@
                     this.$Progress.fail();
                 });
             },
+        getResults(page = 1) {
+          axios.get('api/usulan_dosen?page=' + page)
+            .then(response => {
+              this.usulan = response.data;
+            });
+		    },
         newModal(){
           this.editmode = false;
           this.form.reset();
           $('#addNew').modal('show');
         },
+        editModal(usulan){
+          this.editmode = true;
+          this.form.reset();
+          $('#addNew').modal('show');
+          this.form.fill(usulan);
+        },
         loadUsulan(){
-          axios.get("api/usulan").then(({ data }) => this.usulan = data.data);
+          axios.get("api/usulan").then(({ data }) => this.usulan = data);
         },
         createUsulan() {
           this.$Progress.start();

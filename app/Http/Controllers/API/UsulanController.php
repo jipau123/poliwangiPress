@@ -52,6 +52,7 @@ class UsulanController extends Controller
      */
     public function store(Request $request)
     {
+        // $usulan = auth('api')->usulan();
         $user = auth('api')->user();
         //
         return Usulan::create([
