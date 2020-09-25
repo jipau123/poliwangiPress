@@ -84,7 +84,10 @@ class UsulanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $usulan = Usulan::findOrFail($id);
+
+        $usulan->update($request->all());
+        return ['message' => 'Usulan telah diupdate'];
     }
 
     /**

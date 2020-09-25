@@ -56,7 +56,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="usulan in usulan" :key="usulan.id">
+                    <tr v-for="usulan in usulan.data" :key="usulan.id">
                       <!-- <td>{{usulan.id}}</td> -->
                       <td>{{usulan.judul}}</td>
                       <td>{{usulan.created_at | myDate}}</td>
@@ -80,16 +80,16 @@
                 </table>
               </div>
               <!-- /.card-body -->
-              <!-- <div class="card-footer">
+              <div class="card-footer">
                   <pagination :data="usulan" @pagination-change-page="getResults"></pagination>
-              </div> -->
+              </div>
             </div>
             <!-- /.card -->
           </div>
         </div>
 
         <!-- Modal -->
-            <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
+            <div class="modal fade" v-show="!editmode" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -98,7 +98,7 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="createUsulan">
+                <form @submit.prevent="editmode ? updateUsulan() : createUsulan()">
                 <div class="modal-body">
                     <div class="form-group">
                             <label for="inputJudul" class="col-form-label">Judul</label>
@@ -140,6 +140,7 @@
     export default {
       data() {
         return {
+          editmode : false,
           usulan : {},
           form: new Form({
             id : '',
@@ -151,18 +152,18 @@
         }
       },
       methods: {
-        // getResults(page = 1) {
-        //   axios.get('api/usulan?page=' + page)
-        //     .then(response => {
-        //       this.usulan = response.data;
-        //     });
-		    // },
+        getResults(page = 1) {
+          axios.get('api/usulan_dosen?page=' + page)
+            .then(response => {
+              this.usulan = response.data;
+            });
+		    },
         newModal(){
           this.form.reset();
           $('#addNew').modal('show');
         },
         loadUsulan(){
-          axios.get("api/usulan").then(({ data }) => this.usulan = data.data);
+          axios.get("api/usulan").then(({ data }) => this.usulan = data);
         },
         createUsulan() {
           this.$Progress.start();

@@ -118,7 +118,7 @@
                 if(this.form.password == ''){
                     this.form.password = undefined;
                 }
-                this.form.put('api/update_password')
+                this.form.put('api/profile')
                 .then(()=>{
                     Fire.$emit('AfterCreate');
                     this.form.reset();
