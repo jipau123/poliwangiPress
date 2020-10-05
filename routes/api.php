@@ -31,5 +31,9 @@ Route::get('usulan_dosen', 'API\UsulanController@index');
 Route::get('usulan_admin', 'API\UsulanController@index_admin');
 Route::get('usulan_diterima', 'API\UsulanController@index_diterima');
 
+Route::get('download/usulan/{file}', 'API\UsulanController@downloadFile');
+
 Route::apiResources(['usulan' => 'API\UsulanController']);
 
+Route::apiResources(['panduan' => 'API\PanduanController']);
+Route::get('download/panduan/{berkas}', 'API\UsulanController@downloadFile');

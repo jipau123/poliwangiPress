@@ -3,19 +3,24 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Panduan</div>
+                <div class="card-header text-center">
+                    <strong>Panduan Poliwangi | PRESS</strong>
+                </div>
 
                     <div class="card-body">
                         <form class="form-horizontal">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="col-sm-12">
-                                    <input @change="updateFile" type="file" name="file" class="form-input">
+                                    Panduan Poliwangi | PRESS
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <div class="form-group text-center">
                                 <div class="col-sm-12">
-                                    <button type="submit" @click.prevent="uploadFile"
-                                    class="btn btn-success">Upload</button>
+                                    <button type="submit" @click.prevent="unduhPanduan"
+                                    class="btn btn-success">
+                                    <i class="fas fa-download nav-icon"></i>
+                                    Unduh Panduan
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -45,17 +50,9 @@
         },
 
         methods: {
-
-            // getProfilePhoto() {
-            //     let file = (this.form.file.length > 200) ? this.form.file : "img/panduan/"+ this.form.file;
-            //     return file;
-            // },
-            uploadFile() {
+            unduhPanduan() {
                 this.$Progress.start();
-                // if(this.form.password == ''){
-                //     this.form.password = undefined;
-                // }
-                this.form.put('api/usulan')
+                this.form.put('api/panduan')
                 .then(()=>{
                     Fire.$emit('AfterCreate');
                     this.$Progress.finish();
@@ -63,26 +60,6 @@
                 .catch(()=>{
                     this.$Progress.fail();
                 });
-            },
-            updateFile(e) {
-                // console.log('uploading');
-                let file = e.target.files[0];
-                console.log(file);
-                let reader = new FileReader();
-                if(file['size'] < 10111775) {
-                    reader.onloadend = (file) => {
-                    // console.log('RESULT', reader.result)
-                    this.form.file = reader.result;
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'You are uploading a large file',
-                    })
-                }
-                
             }
         },
         created() {

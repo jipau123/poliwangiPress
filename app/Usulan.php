@@ -55,6 +55,7 @@ class Usulan extends Authenticatable
         return $user = DB::table('usulan')
             ->select('usulan.*','users.name')
             ->leftJoin('users', 'usulan.id_user', '=', 'users.id')
+            ->where('usulan.status','=','pengajuan')
             ->paginate(5);
     }
 

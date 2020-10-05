@@ -48,10 +48,10 @@
                       <th>Judul</th>
                       <!-- <th>Deskripsi</th> -->
                       <th>User</th>
-                      <!-- <th>File</th> -->
+                      <th>File</th>
                       <th>Registered At</th>
                       <th>Status</th>
-                      <th>Modify</th>
+                      <!-- <th>Modify</th> -->
                     </tr>
                   </thead>
                   <tbody>
@@ -60,10 +60,11 @@
                       <td>{{usulan.judul}}</td>
                       <!-- <td>{{usulan.deskripsi}}</td> -->
                       <td>{{usulan.name}}</td>
+                      <td><a href="#" @click="download(usulan.file)">{{usulan.file}}</a></td>
                       <!-- <td>{{usulan.file}}</td> -->
                       <td>{{usulan.created_at | myDate}}</td>
                       <td>{{usulan.status}}</td>
-                      <td>
+                      <!-- <td>
                           <a href="#" @click="editModal(usulan)">
                               <i class="fa fa-edit blue"></i>
                           </a>
@@ -71,7 +72,7 @@
                           <a href="#" @click="deleteUsulan(usulan.id)">
                               <i class="fa fa-trash red"></i>
                           </a>
-                      </td>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>
@@ -131,7 +132,7 @@
                               <label for="file" class="col-form-label">Upload File</label>
                                     
                               <div class="col-sm-12">
-                                  <input type="file" name="file" class="form-input">
+                                  <input type="file" name="file" class="form-input" v-on:change="onFileChange">
                               </div>
                     </div>
                 </div>
@@ -151,7 +152,7 @@
     export default {
       data() {
         return {
-          editmode : true,
+          editmode : false,
           usulan : {},
           form: new Form({
             id : '',
@@ -189,10 +190,12 @@
             });
 		    },
         newModal(){
+          this.editmode = false;
           this.form.reset();
           $('#addNew').modal('show');
         },
         editModal(usulan){
+          this.editmode = true;
           this.form.reset();
           $('#addNew').modal('show');
           this.form.fill(usulan);
@@ -224,11 +227,35 @@
                 })
         },
         loadUsulan(){
-          axios.get("api/usulan_admin").then(({ data }) => this.usulan = data);
+          axios.get("api/usulan_diterima").then(({ data }) => this.usulan = data);
+        },
+        download(file){
+          axios.get('/download/usulan/'+file, {responseType: 'arraybuffer'}).then(res=>{
+            let blob = new Blob([res.data], {type:'application/*'})
+            let link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = file
+            link._target = 'blank'
+            link.click();
+          })
+        },
+        onFileChange(e){
+          console.log(e.target.files[0]);
+          this.file = e.target.files[0];
         },
         createUsulan() {
           this.$Progress.start();
-          this.form.post('api/usulan')
+          const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+    
+                let formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('judul', this.form.judul);
+                formData.append('deskripsi', this.form.deskripsi);
+   
+                axios.post('/api/usulan', formData, config)
+          // this.form.post('api/usulan')
           .then(()=>{
               Fire.$emit('AfterCreate');
               $('#addNew').modal('hide')

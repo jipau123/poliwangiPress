@@ -2249,10 +2249,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      editmode: true,
+      editmode: false,
       usulan: {},
       form: new Form({
         id: '',
@@ -2290,10 +2291,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     newModal: function newModal() {
+      this.editmode = false;
       this.form.reset();
       $('#addNew').modal('show');
     },
     editModal: function editModal(usulan) {
+      this.editmode = true;
       this.form.reset();
       $('#addNew').modal('show');
       this.form.fill(usulan);
@@ -2323,16 +2326,44 @@ __webpack_require__.r(__webpack_exports__);
     loadUsulan: function loadUsulan() {
       var _this4 = this;
 
-      axios.get("api/usulan_admin").then(function (_ref) {
+      axios.get("api/usulan_diterima").then(function (_ref) {
         var data = _ref.data;
         return _this4.usulan = data;
       });
+    },
+    download: function download(file) {
+      axios.get('/download/usulan/' + file, {
+        responseType: 'arraybuffer'
+      }).then(function (res) {
+        var blob = new Blob([res.data], {
+          type: 'application/*'
+        });
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file;
+        link._target = 'blank';
+        link.click();
+      });
+    },
+    onFileChange: function onFileChange(e) {
+      console.log(e.target.files[0]);
+      this.file = e.target.files[0];
     },
     createUsulan: function createUsulan() {
       var _this5 = this;
 
       this.$Progress.start();
-      this.form.post('api/usulan').then(function () {
+      var config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      var formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('judul', this.form.judul);
+      formData.append('deskripsi', this.form.deskripsi);
+      axios.post('/api/usulan', formData, config) // this.form.post('api/usulan')
+      .then(function () {
         Fire.$emit('AfterCreate');
         $('#addNew').modal('hide');
         toast.fire({
@@ -2489,9 +2520,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      panduan: {},
       form: new Form({
         id: '',
         file: ''
@@ -2502,55 +2565,94 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
-    // getProfilePhoto() {
-    //     let file = (this.form.file.length > 200) ? this.form.file : "img/panduan/"+ this.form.file;
-    //     return file;
-    // },
-    uploadFile: function uploadFile() {
+    updatePanduan: function updatePanduan() {
       var _this = this;
 
-      this.$Progress.start(); // if(this.form.password == ''){
-      //     this.form.password = undefined;
-      // }
-
-      this.form.put('api/usulan').then(function () {
-        Fire.$emit('AfterCreate');
+      this.$Progress.start();
+      this.form.put('api/panduan' + this.form.id).then(function () {
+        $('#addNew').modal('hide');
+        swal.fire('Updated!', 'Information has been updated.', 'success');
 
         _this.$Progress.finish();
+
+        Fire.$emit('AfterCreate');
       })["catch"](function () {
         _this.$Progress.fail();
       });
     },
-    updateFile: function updateFile(e) {
+    deletePanduan: function deletePanduan(id) {
       var _this2 = this;
 
-      // console.log('uploading');
-      var file = e.target.files[0];
-      console.log(file);
-      var reader = new FileReader();
-
-      if (file['size'] < 10111775) {
-        reader.onloadend = function (file) {
-          // console.log('RESULT', reader.result)
-          _this2.form.file = reader.result;
-        };
-
-        reader.readAsDataURL(file);
-      } else {
-        swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'You are uploading a large file'
+      swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          _this2.form["delete"]('api/panduan/' + id).then(function () {
+            swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            Fire.$emit('AfterCreate');
+          })["catch"](function () {
+            swal.fire("Failed!", "There was something wronge.", "warning");
+          });
+        }
+      });
+    },
+    // loadPanduan(){
+    //     axios.get("api/panduan").then(({ data }) => this.usulan = data.data);
+    // },
+    download: function download(file) {
+      axios.get('/download/panduan/' + file, {
+        responseType: 'arraybuffer'
+      }).then(function (res) {
+        var blob = new Blob([res.data], {
+          type: 'application/*'
         });
-      }
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file;
+        link._target = 'blank';
+        link.click();
+      });
+    },
+    onFileChange: function onFileChange(e) {
+      console.log(e.target.files[0]);
+      this.file = e.target.files[0];
+    },
+    createPanduan: function createPanduan() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      var config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      var formData = new FormData();
+      formData.append('file', this.file);
+      axios.post('/api/panduan', formData, config) // this.form.post('api/usulan')
+      .then(function () {
+        Fire.$emit('AfterCreate');
+        $('#addNew').modal('hide');
+        toast.fire({
+          type: 'success',
+          title: 'Panduan Created in successfully'
+        });
+
+        _this3.$Progress.finish();
+      })["catch"](function () {});
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this4 = this;
 
-    axios.get("api/usulan").then(function (_ref) {
+    axios.get("api/panduan").then(function (_ref) {
       var data = _ref.data;
-      return _this3.form.fill(data);
+      return _this4.form.fill(data);
     });
   }
 });
@@ -2598,6 +2700,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2611,55 +2718,25 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
-    // getProfilePhoto() {
-    //     let file = (this.form.file.length > 200) ? this.form.file : "img/panduan/"+ this.form.file;
-    //     return file;
-    // },
-    uploadFile: function uploadFile() {
+    unduhPanduan: function unduhPanduan() {
       var _this = this;
 
-      this.$Progress.start(); // if(this.form.password == ''){
-      //     this.form.password = undefined;
-      // }
-
-      this.form.put('api/usulan').then(function () {
+      this.$Progress.start();
+      this.form.put('api/panduan').then(function () {
         Fire.$emit('AfterCreate');
 
         _this.$Progress.finish();
       })["catch"](function () {
         _this.$Progress.fail();
       });
-    },
-    updateFile: function updateFile(e) {
-      var _this2 = this;
-
-      // console.log('uploading');
-      var file = e.target.files[0];
-      console.log(file);
-      var reader = new FileReader();
-
-      if (file['size'] < 10111775) {
-        reader.onloadend = function (file) {
-          // console.log('RESULT', reader.result)
-          _this2.form.file = reader.result;
-        };
-
-        reader.readAsDataURL(file);
-      } else {
-        swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'You are uploading a large file'
-        });
-      }
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this2 = this;
 
     axios.get("api/usulan").then(function (_ref) {
       var data = _ref.data;
-      return _this3.form.fill(data);
+      return _this2.form.fill(data);
     });
   }
 });
@@ -3831,6 +3908,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3912,11 +3992,39 @@ __webpack_require__.r(__webpack_exports__);
         return _this4.usulan = data;
       });
     },
+    download: function download(file) {
+      axios.get('/download/usulan/' + file, {
+        responseType: 'arraybuffer'
+      }).then(function (res) {
+        var blob = new Blob([res.data], {
+          type: 'application/*'
+        });
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file;
+        link._target = 'blank';
+        link.click();
+      });
+    },
+    onFileChange: function onFileChange(e) {
+      console.log(e.target.files[0]);
+      this.file = e.target.files[0];
+    },
     createUsulan: function createUsulan() {
       var _this5 = this;
 
       this.$Progress.start();
-      this.form.post('api/usulan').then(function () {
+      var config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      var formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('judul', this.form.judul);
+      formData.append('deskripsi', this.form.deskripsi);
+      axios.post('/api/usulan', formData, config) // this.form.post('api/usulan')
+      .then(function () {
         Fire.$emit('AfterCreate');
         $('#addNew').modal('hide');
         toast.fire({
@@ -3953,6 +4061,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -4148,11 +4257,39 @@ __webpack_require__.r(__webpack_exports__);
         return _this3.usulan = data;
       });
     },
+    download: function download(file) {
+      axios.get('/download/usulan/' + file, {
+        responseType: 'arraybuffer'
+      }).then(function (res) {
+        var blob = new Blob([res.data], {
+          type: 'application/*'
+        });
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file;
+        link._target = 'blank';
+        link.click();
+      });
+    },
+    onFileChange: function onFileChange(e) {
+      console.log(e.target.files[0]);
+      this.file = e.target.files[0];
+    },
     createUsulan: function createUsulan() {
       var _this4 = this;
 
       this.$Progress.start();
-      this.form.post('api/usulan').then(function () {
+      var config = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      var formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('judul', this.form.judul);
+      formData.append('deskripsi', this.form.deskripsi);
+      axios.post('/api/usulan', formData, config) // this.form.post('api/usulan')
+      .then(function () {
         Fire.$emit('AfterCreate');
         $('#addNew').modal('hide');
         toast.fire({
@@ -67903,40 +68040,25 @@ var render = function() {
                     _c("td", [_vm._v(_vm._s(usulan.name))]),
                     _vm._v(" "),
                     _c("td", [
+                      _c(
+                        "a",
+                        {
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              return _vm.download(usulan.file)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(usulan.file))]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
                       _vm._v(_vm._s(_vm._f("myDate")(usulan.created_at)))
                     ]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(usulan.status))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "a",
-                        {
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.editModal(usulan)
-                            }
-                          }
-                        },
-                        [_c("i", { staticClass: "fa fa-edit blue" })]
-                      ),
-                      _vm._v(
-                        "\n                      /\n                      "
-                      ),
-                      _c(
-                        "a",
-                        {
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteUsulan(usulan.id)
-                            }
-                          }
-                        },
-                        [_c("i", { staticClass: "fa fa-trash red" })]
-                      )
-                    ])
+                    _c("td", [_vm._v(_vm._s(usulan.status))])
                   ])
                 }),
                 0
@@ -68177,10 +68299,24 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _vm._m(3)
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      { staticClass: "col-form-label", attrs: { for: "file" } },
+                      [_vm._v("Upload File")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-12" }, [
+                      _c("input", {
+                        staticClass: "form-input",
+                        attrs: { type: "file", name: "file" },
+                        on: { change: _vm.onFileChange }
+                      })
+                    ])
+                  ])
                 ]),
                 _vm._v(" "),
-                _vm._m(4)
+                _vm._m(3)
               ]
             )
           ])
@@ -68210,11 +68346,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("User")]),
         _vm._v(" "),
+        _c("th", [_vm._v("File")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Registered At")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Modify")])
+        _c("th", [_vm._v("Status")])
       ])
     ])
   },
@@ -68234,23 +68370,6 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { staticClass: "col-form-label", attrs: { for: "file" } }, [
-        _vm._v("Upload File")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "file", name: "file" }
-        })
-      ])
-    ])
   },
   function() {
     var _vm = this
@@ -70133,7 +70252,9 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Berkas Panduan")]),
+          _c("div", { staticClass: "card-header text-center" }, [
+            _vm._v("Berkas Panduan")
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("form", { staticClass: "form-horizontal" }, [
@@ -70142,12 +70263,12 @@ var render = function() {
                   _c("input", {
                     staticClass: "form-input",
                     attrs: { type: "file", name: "file" },
-                    on: { change: _vm.updateFile }
+                    on: { change: _vm.onFileChange }
                   })
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group text-right" }, [
                 _c("div", { staticClass: "col-sm-12" }, [
                   _c(
                     "button",
@@ -70157,7 +70278,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.uploadFile($event)
+                          return _vm.updatePanduan($event)
                         }
                       }
                     },
@@ -70198,21 +70319,11 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Panduan")]),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("form", { staticClass: "form-horizontal" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("div", { staticClass: "col-sm-12" }, [
-                  _c("input", {
-                    staticClass: "form-input",
-                    attrs: { type: "file", name: "file" },
-                    on: { change: _vm.updateFile }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "form-group text-center" }, [
                 _c("div", { staticClass: "col-sm-12" }, [
                   _c(
                     "button",
@@ -70222,11 +70333,16 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.uploadFile($event)
+                          return _vm.unduhPanduan($event)
                         }
                       }
                     },
-                    [_vm._v("Upload")]
+                    [
+                      _c("i", { staticClass: "fas fa-download nav-icon" }),
+                      _vm._v(
+                        "\n                                Unduh Panduan\n                                "
+                      )
+                    ]
                   )
                 ])
               ])
@@ -70237,7 +70353,16 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header text-center" }, [
+      _c("strong", [_vm._v("Panduan Poliwangi | PRESS")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -71735,6 +71860,23 @@ var render = function() {
                     _c("td", [_vm._v(_vm._s(usulan.name))]),
                     _vm._v(" "),
                     _c("td", [
+                      _c(
+                        "a",
+                        {
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              return _vm.download(usulan.file)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(usulan.file))]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(usulan.status))]),
+                    _vm._v(" "),
+                    _c("td", [
                       _vm._v(_vm._s(_vm._f("myDate")(usulan.created_at)))
                     ]),
                     _vm._v(" "),
@@ -72066,6 +72208,10 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("User")]),
         _vm._v(" "),
+        _c("th", [_vm._v("File")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Status")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Registered At")]),
         _vm._v(" "),
         _c("th", [_vm._v("Modify")])
@@ -72159,7 +72305,20 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(usulan.name))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(usulan.file))]),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              return _vm.download(usulan.file)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(usulan.file))]
+                      )
+                    ]),
                     _vm._v(" "),
                     _c("td", [
                       _vm._v(_vm._s(_vm._f("myDate")(usulan.created_at)))
@@ -72325,7 +72484,21 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _vm._m(2)
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "label",
+                      { staticClass: "col-form-label", attrs: { for: "file" } },
+                      [_vm._v("Upload File")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-12" }, [
+                      _c("input", {
+                        staticClass: "form-input",
+                        attrs: { type: "file", name: "file" },
+                        on: { change: _vm.onFileChange }
+                      })
+                    ])
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-footer" }, [
@@ -72413,23 +72586,6 @@ var staticRenderFns = [
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { staticClass: "col-form-label", attrs: { for: "file" } }, [
-        _vm._v("Upload File")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "file", name: "file" }
-        })
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -89002,7 +89158,13 @@ Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_5___default.a, {
   color: 'rgb(143, 255, 199)',
   failedColor: 'red',
   height: '3px'
-});
+}); // import Vue from 'vue';
+// import VueMaterial from 'vue-material'
+// import 'vue-material/dist/vue-material.min.css'
+// Vue.use(VueMaterial)
+// import Panduan from './components/Panduan';
+// import PanduanDosen from './components/PanduanDosen';
+
 var routes = [{
   path: '/dashboard',
   component: __webpack_require__(/*! ./components/Dashboard.vue */ "./resources/js/components/Dashboard.vue")["default"]
@@ -89089,7 +89251,10 @@ var app = new Vue({
     printme: function printme() {
       window.print();
     }
-  }
+  } // components:{
+  //   Panduan,
+  // }
+
 });
 
 /***/ }),

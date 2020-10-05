@@ -44,6 +44,15 @@ Vue.use(VueProgressBar, {
   height: '3px'
 })
 
+// import Vue from 'vue';
+// import VueMaterial from 'vue-material'
+// import 'vue-material/dist/vue-material.min.css'
+
+// Vue.use(VueMaterial)
+
+// import Panduan from './components/Panduan';
+// import PanduanDosen from './components/PanduanDosen';
+
 let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/developer', component: require('./components/Developer.vue').default },
@@ -130,4 +139,7 @@ const app = new Vue({
         window.print();
       }
     }
+    // components:{
+    //   Panduan,
+    // }
 });

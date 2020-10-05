@@ -59,7 +59,8 @@
                       <td>{{usulan.judul}}</td>
                       <!-- <td>{{usulan.deskripsi}}</td> -->
                       <td>{{usulan.name}}</td>
-                      <td>{{usulan.file}}</td>
+                      <td><a href="#" @click="download(usulan.file)">{{usulan.file}}</a></td>
+                      <!-- <td>{{usulan.file}}</td> -->
                       <td>{{usulan.created_at | myDate}}</td>
                       <!-- <td>
                           <a href="#">
@@ -117,7 +118,7 @@
                               <label for="file" class="col-form-label">Upload File</label>
                                     
                               <div class="col-sm-12">
-                                  <input type="file" name="file" class="form-input">
+                                  <input type="file" name="file" class="form-input" v-on:change="onFileChange">
                               </div>
                     </div>
                 </div>
@@ -189,9 +190,33 @@
         loadUsulan(){
           axios.get("api/usulan").then(({ data }) => this.usulan = data);
         },
+        download(file){
+          axios.get('/download/usulan/'+file, {responseType: 'arraybuffer'}).then(res=>{
+            let blob = new Blob([res.data], {type:'application/*'})
+            let link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = file
+            link._target = 'blank'
+            link.click();
+          })
+        },
+        onFileChange(e){
+          console.log(e.target.files[0]);
+          this.file = e.target.files[0];
+        },
         createUsulan() {
           this.$Progress.start();
-          this.form.post('api/usulan')
+          const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+    
+                let formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('judul', this.form.judul);
+                formData.append('deskripsi', this.form.deskripsi);
+   
+                axios.post('/api/usulan', formData, config)
+          // this.form.post('api/usulan')
           .then(()=>{
               Fire.$emit('AfterCreate');
               $('#addNew').modal('hide')

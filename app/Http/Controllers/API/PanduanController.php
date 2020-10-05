@@ -4,20 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Usulan;
+use App\Panduan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
-class UsulanController extends Controller
+class PanduanController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -26,22 +18,6 @@ class UsulanController extends Controller
     public function index()
     {
         //
-        // if (\Gate::allows('isUser')) {
-            // return Usulan::latest()->paginate(10);
-            return Usulan::allJoin_id();
-        //  }
-    }
-
-    public function index_admin()
-    {
-        //
-            return Usulan::allJoin();
-    }
-
-    public function index_diterima()
-    {
-        //
-            return Usulan::allJoin_diterima();
     }
 
     /**
@@ -52,24 +28,17 @@ class UsulanController extends Controller
      */
     public function store(Request $request)
     {
-        // $usulan = auth('api')->usulan();
-        $user = auth('api')->user();
         //
 
         $fileName = time().'.'.$request->file->getClientOriginalExtension();
         $request->file->move(public_path('file'), $fileName);
 
         return Usulan::create([
-            'judul' => $request['judul'],
-            'deskripsi' => $request['deskripsi'],
-            // 'file' => $request['file'],
             'file' => $fileName,
-            'id_user'=> $user->id,
-            'status'=>'pengajuan'
         ]);
     }
 
-    public function downloadFile($file){
+    public function downloadPanduan($file){
         $path = public_path().'/file/'.$file; // or storage_path() if needed
         $header = [
             'Content-Type' => 'application/*',
@@ -97,10 +66,7 @@ class UsulanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $usulan = Usulan::findOrFail($id);
-
-        $usulan->update($request->all());
-        return ['message' => 'Usulan telah diupdate'];
+        //
     }
 
     /**
@@ -111,12 +77,6 @@ class UsulanController extends Controller
      */
     public function destroy($id)
     {
-        $usulan = Usulan::findOrFail($id);
-
-        // delete the user
-
-        $usulan->delete();
-
-        return ['message' => 'Usulan Deleted'];
+        //
     }
 }
