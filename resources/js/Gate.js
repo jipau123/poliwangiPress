@@ -12,14 +12,18 @@ export default class Gate{
         return this.user.type === 'user';
     }
 
-    isAdminOrAuthor(){
-        if(this.user.type === 'admin' || this.user.type === 'author') {
+    isReviewer(){
+        return this.user.type === 'reviewer';
+    }
+
+    isAdminOrReviewer(){
+        if(this.user.type === 'admin' || this.user.type === 'reviewer') {
             return true;
         }
     }
 
-    isAuthorOrUser(){
-        if(this.user.type === 'user' || this.user.type === 'author') {
+    isReviewerOrUser(){
+        if(this.user.type === 'user' || this.user.type === 'reviewer') {
             return true;
         }
     }

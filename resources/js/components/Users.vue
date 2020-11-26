@@ -20,11 +20,11 @@
                     <tr>
                       <!-- <th>No.</th> -->
                       <th>ID</th>
-                      <th>Name</th>
+                      <th>Nama</th>
                       <th>Email</th>
-                      <th>Type</th>
+                      <th>Tipe</th>
                       <th>Registered At</th>
-                      <th>Modify</th>
+                      <th>#</th>
                     </tr>
                   
                     <!-- <tr v-for="(user, index) in reverseUsers" :key="index++"> -->
@@ -78,7 +78,7 @@
                     <form @submit.prevent="editmode ? updateUser() : createUser()">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="inputName" class="col-form-label">Name</label>
+                            <label for="inputName" class="col-form-label">Nama</label>
 
                             <input v-model="form.name" type="text" name="name"
                                 placeholder="Name"
@@ -103,14 +103,14 @@
                             <has-error :form="form" field="bio"></has-error>
                         </div>
                         <div class="form-group">
-                            <label for="type" class="col-form-label">Type</label>
+                            <label for="type" class="col-form-label">Tipe</label>
 
                             <select v-model="form.type" id="type" name="type"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
                                 <option value="">Select User Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
-                                <!-- <option value="author">Author</option> -->
+                                <option value="reviewer">Reviewer</option>
                             </select>
                             <has-error :form="form" field="name"></has-error>
                         </div>

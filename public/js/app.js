@@ -71494,7 +71494,7 @@ var render = function() {
                           staticClass: "col-form-label",
                           attrs: { for: "inputName" }
                         },
-                        [_vm._v("Name")]
+                        [_vm._v("Nama")]
                       ),
                       _vm._v(" "),
                       _c("input", {
@@ -71635,7 +71635,7 @@ var render = function() {
                           staticClass: "col-form-label",
                           attrs: { for: "type" }
                         },
-                        [_vm._v("Type")]
+                        [_vm._v("Tipe")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -71683,6 +71683,10 @@ var render = function() {
                           _vm._v(" "),
                           _c("option", { attrs: { value: "user" } }, [
                             _vm._v("User")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "reviewer" } }, [
+                            _vm._v("Reviewer")
                           ])
                         ]
                       ),
@@ -71809,15 +71813,15 @@ var staticRenderFns = [
     return _c("tr", [
       _c("th", [_vm._v("ID")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Name")]),
+      _c("th", [_vm._v("Nama")]),
       _vm._v(" "),
       _c("th", [_vm._v("Email")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Type")]),
+      _c("th", [_vm._v("Tipe")]),
       _vm._v(" "),
       _c("th", [_vm._v("Registered At")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Modify")])
+      _c("th", [_vm._v("#")])
     ])
   },
   function() {
@@ -89102,16 +89106,21 @@ var Gate = /*#__PURE__*/function () {
       return this.user.type === 'user';
     }
   }, {
-    key: "isAdminOrAuthor",
-    value: function isAdminOrAuthor() {
-      if (this.user.type === 'admin' || this.user.type === 'author') {
+    key: "isReviewer",
+    value: function isReviewer() {
+      return this.user.type === 'reviewer';
+    }
+  }, {
+    key: "isAdminOrReviewer",
+    value: function isAdminOrReviewer() {
+      if (this.user.type === 'admin' || this.user.type === 'reviewer') {
         return true;
       }
     }
   }, {
-    key: "isAuthorOrUser",
-    value: function isAuthorOrUser() {
-      if (this.user.type === 'user' || this.user.type === 'author') {
+    key: "isReviewerOrUser",
+    value: function isReviewerOrUser() {
+      if (this.user.type === 'user' || this.user.type === 'reviewer') {
         return true;
       }
     }
