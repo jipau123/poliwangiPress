@@ -6,7 +6,7 @@
                     <div class="card-header text-center">Berkas Panduan</div>
 
                     <div class="card-body">
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" @submit.prevent="editmode ? updatePanduan() : createPanduan()">
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <input type="file" name="file" class="form-input"
@@ -16,7 +16,7 @@
                             <div class="form-group text-right">
                                 <div class="col-sm-12">
                                     <button type="submit" @click.prevent="updatePanduan"
-                                    class="btn btn-success">Upload</button>
+                                    class="btn btn-success" v-on:change="onFileChange">Upload</button>
                                 </div>
                             </div>
                         </form>
@@ -79,7 +79,7 @@
         methods: {
             updatePanduan() {
                 this.$Progress.start();
-                this.form.put('api/panduan'+this.form.id)
+                this.form.post('api/panduan'+this.form.id)
                 .then(()=>{
                     $('#addNew').modal('hide');
                     swal.fire(
@@ -121,9 +121,9 @@
                             }
                         })
             },
-            // loadPanduan(){
-            //     axios.get("api/panduan").then(({ data }) => this.usulan = data.data);
-            // },
+            loadPanduan(){
+                axios.get("api/panduan").then(({ data }) => this.panduan = data.data);
+            },
             download(file){
                 axios.get('/download/panduan/'+file, {responseType: 'arraybuffer'}).then(res=>{
                     let blob = new Blob([res.data], {type:'application/*'})
@@ -167,8 +167,13 @@
                 }
         },
         created() {
-            axios.get("api/panduan")
-            .then(({ data }) => (this.form.fill(data)));
+            // axios.get("api/panduan")
+            // .then(({ data }) => (this.form.fill(data)));
+
+            this.loadPanduan();
+            Fire.$on('AfterCreate',()=>{
+            this.loadPanduan();
+            });
         }
     }
 

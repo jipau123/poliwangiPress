@@ -36,4 +36,4 @@ Route::get('download/usulan/{file}', 'API\UsulanController@downloadFile');
 Route::apiResources(['usulan' => 'API\UsulanController']);
 
 Route::apiResources(['panduan' => 'API\PanduanController']);
-Route::get('download/panduan/{berkas}', 'API\UsulanController@downloadFile');
+Route::get('download/panduan/{berkas}', 'API\UsulanController@downloadPanduan');

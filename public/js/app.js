@@ -2569,7 +2569,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      this.form.put('api/panduan' + this.form.id).then(function () {
+      this.form.post('api/panduan' + this.form.id).then(function () {
         $('#addNew').modal('hide');
         swal.fire('Updated!', 'Information has been updated.', 'success');
 
@@ -2602,9 +2602,14 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    // loadPanduan(){
-    //     axios.get("api/panduan").then(({ data }) => this.usulan = data.data);
-    // },
+    loadPanduan: function loadPanduan() {
+      var _this3 = this;
+
+      axios.get("api/panduan").then(function (_ref) {
+        var data = _ref.data;
+        return _this3.panduan = data.data;
+      });
+    },
     download: function download(file) {
       axios.get('/download/panduan/' + file, {
         responseType: 'arraybuffer'
@@ -2624,7 +2629,7 @@ __webpack_require__.r(__webpack_exports__);
       this.file = e.target.files[0];
     },
     createPanduan: function createPanduan() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       var config = {
@@ -2643,16 +2648,18 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Panduan Created in successfully'
         });
 
-        _this3.$Progress.finish();
+        _this4.$Progress.finish();
       })["catch"](function () {});
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
-    axios.get("api/panduan").then(function (_ref) {
-      var data = _ref.data;
-      return _this4.form.fill(data);
+    // axios.get("api/panduan")
+    // .then(({ data }) => (this.form.fill(data)));
+    this.loadPanduan();
+    Fire.$on('AfterCreate', function () {
+      _this5.loadPanduan();
     });
   }
 });
@@ -70257,36 +70264,49 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c("form", { staticClass: "form-horizontal" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("div", { staticClass: "col-sm-12" }, [
-                  _c("input", {
-                    staticClass: "form-input",
-                    attrs: { type: "file", name: "file" },
-                    on: { change: _vm.onFileChange }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group text-right" }, [
-                _c("div", { staticClass: "col-sm-12" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-success",
-                      attrs: { type: "submit" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.updatePanduan($event)
+            _c(
+              "form",
+              {
+                staticClass: "form-horizontal",
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.editmode ? _vm.updatePanduan() : _vm.createPanduan()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "col-sm-12" }, [
+                    _c("input", {
+                      staticClass: "form-input",
+                      attrs: { type: "file", name: "file" },
+                      on: { change: _vm.onFileChange }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group text-right" }, [
+                  _c("div", { staticClass: "col-sm-12" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success",
+                        attrs: { type: "submit" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.updatePanduan($event)
+                          },
+                          change: _vm.onFileChange
                         }
-                      }
-                    },
-                    [_vm._v("Upload")]
-                  )
+                      },
+                      [_vm._v("Upload")]
+                    )
+                  ])
                 ])
-              ])
-            ])
+              ]
+            )
           ])
         ])
       ])
